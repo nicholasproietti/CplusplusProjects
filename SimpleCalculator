@@ -1,0 +1,49 @@
+//Simple calculator involving two floating variables and four operators.
+
+#include "stdafx.h"
+#include <iostream>
+
+double readNumber() {
+	std::cout << "Enter a double value:" << std::endl;
+	double x;
+	std::cin >> x;
+	return x;
+}
+
+char readOperator() {
+	std::cout << "Enter an operator: +, -, *, /" << std::endl;
+	char op;
+	std::cin >> op;
+	return op;
+}
+
+void printAnswer(double x, char op, double y) {
+	if (op == '+')
+		std::cout << "The sum of the doubles is " << x + y << std::endl;
+	if (op == '-') {
+		if (x > y) {
+			std::cout << "The difference of the doubles is " << x - y << std::endl;
+		}
+		else
+			std::cout << "The difference of the doubles is " << y - x << std::endl;
+	}
+	if (op == '*')
+		std::cout << "The product of the doubles is " << x * y << std::endl;
+	if (op == '/') {
+		if (x > y) {
+			std::cout << "The quotient of the doubles is " << x / y << std::endl;
+		}
+		else
+			std::cout << "The quotient of the doubles is " << y / x << std::endl;
+	}
+ }
+
+int main() {
+	double x = readNumber();
+	double y = readNumber();
+	char op = readOperator();
+
+	printAnswer(x, op, y);
+
+	return 0;
+}
