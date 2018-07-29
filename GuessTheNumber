@@ -1,0 +1,86 @@
+// ConsoleApplication1.cpp : Defines the entry point for the console application.
+#include "stdafx.h" // for Visual Studio
+#include <iostream>
+#include <cstdlib> // for srand() and rand()
+#include <ctime> // for time()
+using std::cout;
+using std::cin;
+
+int getRandomNumber(int min, int max)
+{
+	static const double fraction = 1.0 / (RAND_MAX + 1.0);  // static used for efficiency, so we only calculate this value once
+															// evenly distribute the random number across our range
+	return min + static_cast<int>((max - min + 1) * (std::rand() * fraction));
+}
+
+int getGuess(int count) {
+	while (1) // loop until user enters valid input
+	{
+		std::cout << "Guess #" << count << ": ";
+		int guess;
+		std::cin >> guess;
+
+		if (std::cin.fail()) // has a previous extraction failed?
+		{
+			// yep, so let's handle the failure
+			std::cin.clear(); // put us back in 'normal' operation mode
+			std::cin.ignore(32767, '\n'); // and remove the bad input
+		}
+		else
+		{
+			std::cin.ignore(32767, '\n'); // remove any extraneous input
+			return guess;
+		}
+	}
+}
+
+bool playGame(int guesses, int number) {
+	for (int count{ 1 }; count <= guesses; count++) {
+
+		int guess{ getGuess(count) };
+
+		if (guess > number)
+			cout << "Your guess is too high." << std::endl;
+		else if (guess < number)
+			cout << "Your guess is too low." << std::endl;
+		else //guess == number
+			return true;
+	}
+	return false;
+}
+
+bool playAgain() {
+	char play;
+	do
+	{
+		cout << "Would you like to play again? (y/n)" << std::endl;
+		cin >> play;
+	} while (play != 'y' &&  play != 'n');
+
+	return (play == 'y');
+}
+
+int main()
+{
+	std::srand(static_cast<unsigned int>(std::time(0))); //set initial seed value to system clock
+	rand(); //discard first seed value after every generated run
+
+	const int guesses{ 7 };
+
+	do
+	{
+		int number{ getRandomNumber(1,100) };
+
+		cout << "Let's play a game.  I'm thinking of a number between 1 and 100.  You have " << guesses << " tries to guess what it is." << std::endl;
+
+		bool won{ playGame(guesses, number) };
+		if (won)
+			cout << "Correct! You win!" << std::endl;
+		else
+			cout << "Sorry, you lose. The correct number was " << number << "." << std::endl;
+
+	} while (playAgain());
+
+	cout << "Thank you for playing.\n";
+	return 0;
+}
